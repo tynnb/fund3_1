@@ -33,9 +33,15 @@ char get_digit_char(int value) {
     }
 }
 
-char* dec_to_base2r(int number, int r) {
+StatusCode dec_to_base2r(int number, int r, char** result) {
+    if (result == NULL) {
+        return ERROR_NULL_POINTER;
+    }
+
+    *result = NULL;
+
     if (!validate_parameters(r)) {
-        return NULL;
+        return ERROR_INVALID_PARAMETER;
     }
 
     int base_shift = r;
@@ -43,10 +49,13 @@ char* dec_to_base2r(int number, int r) {
     int mask = base - 1;
 
     if (number == 0) {
-        char* result = (char*)malloc(2 * sizeof(char));
-        result[0] = '0';
-        result[1] = '\0';
-        return result;
+        *result = (char*)malloc(2 * sizeof(char));
+        if (*result == NULL) {
+            return ERROR_MEMORY_ALLOCATION;
+        }
+        (*result)[0] = '0';
+        (*result)[1] = '\0';
+        return SUCCESS;
     }
 
     int is_negative = (number >> (sizeof(int) * 8 - 1)) & 1;
@@ -59,28 +68,28 @@ char* dec_to_base2r(int number, int r) {
     }
     
     int length = digit_count + sign_length + 1;
-    char* result = (char*)malloc(length * sizeof(char));
+    *result = (char*)malloc(length * sizeof(char));
 
-    if (result == NULL) {
-        return NULL;
+    if (*result == NULL) {
+        return ERROR_MEMORY_ALLOCATION;
     }
 
     int index = digit_count + sign_length;
-    result[index] = '\0';
+    (*result)[index] = '\0';
     index--;
     int temp = abs_number;
     
     while (temp != 0) {
         int digit = temp & mask;
-        result[index] = get_digit_char(digit);
+        (*result)[index] = get_digit_char(digit);
         index--;
         temp = temp >> base_shift;
     }
 
     if (is_negative) {
-        result[0] = '-';
+        (*result)[0] = '-';
     }
-    return result;
+    return SUCCESS;
 }
 
 void free_string(char* string) {

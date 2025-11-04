@@ -4,7 +4,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-char* dec_to_base2r(int number, int r);
+typedef enum {
+    SUCCESS = 0,
+    ERROR_NULL_POINTER,
+    ERROR_MEMORY_ALLOCATION,
+    ERROR_INVALID_PARAMETER,
+    ERROR_OVERFLOW
+} StatusCode;
+
+StatusCode dec_to_base2r(int number, int r, char** result);
 void free_string(char* string);
 
 int validate_parameters(int r);

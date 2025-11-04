@@ -9,14 +9,14 @@ int main() {
     
     for (int i = 0; i < num_count; i++) {
         for (int j = 0; j < r_count; j++) {
-            char* result = dec_to_base2r(test_numbers[i], test_r[j]);
-            if (result != NULL) {
-                printf("Decimal: %d -> Base 2^%d (%d): %s\n", 
-                       test_numbers[i], test_r[j], (1 << test_r[j]), result);
+            char* result = NULL;
+            StatusCode status = dec_to_base2r(test_numbers[i], test_r[j], &result);
+            if (status == SUCCESS) {
+                printf("Decimal: %d -> Base 2^%d (%d): %s\n", test_numbers[i], test_r[j], (1 << test_r[j]), result);
                 free_string(result);
-            } else {
-                printf("Conversion error for base 2 number %d^%d\n", 
-                       test_numbers[i], test_r[j]);
+            }
+            else {
+                printf("Error: %d for number %d with base 2^%d\n", status, test_numbers[i], test_r[j]);
             }
         }
         printf("\n");
@@ -26,11 +26,14 @@ int main() {
     int additional_r[] = {1, 2, 3, 4, 5};
     
     for (int i = 0; i < 5; i++) {
-        char* result = dec_to_base2r(additional_numbers[i], additional_r[i]);
-        if (result != NULL) {
-            printf("Decimal: %d -> Base 2^%d (%d): %s\n", 
-                   additional_numbers[i], additional_r[i], (1 << additional_r[i]), result);
+        char* result = NULL;
+        StatusCode status = dec_to_base2r(additional_numbers[i], additional_r[i], &result);
+        if (status == SUCCESS) {
+            printf("Decimal: %d -> Base 2^%d (%d): %s\n", additional_numbers[i], additional_r[i], (1 << additional_r[i]), result);
             free_string(result);
+        }
+        else {
+            printf("Error: %d for number %d with base 2^%d\n", status, additional_numbers[i], additional_r[i]);
         }
     }
     
@@ -38,13 +41,15 @@ int main() {
     int boundary_r = 3;
     
     for (int i = 0; i < 4; i++) {
-        char* result = dec_to_base2r(boundary_numbers[i], boundary_r);
-        if (result != NULL) {
-            printf("Decimal: %d -> Base 2^%d (%d): %s\n", 
-                   boundary_numbers[i], boundary_r, (1 << boundary_r), result);
+        char* result = NULL;
+        StatusCode status = dec_to_base2r(boundary_numbers[i], boundary_r, &result);
+        if (status == SUCCESS) {
+            printf("Decimal: %d -> Base 2^%d (%d): %s\n", boundary_numbers[i], boundary_r, (1 << boundary_r), result);
             free_string(result);
         }
+        else {
+            printf("Error: %d for number %d with base 2^%d\n", status, boundary_numbers[i], boundary_r);
+        }
     }
-    
-    return 0;
+    return SUCCESS;
 }
